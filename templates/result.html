@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Loan approval prediction result from LoanAI machine learning system." />
+    <title>LoanAI – Prediction Result</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+
+<body>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="brand-icon">🏦</span>
+            <span class="brand-name">Loan<span class="accent">AI</span></span>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="nav-link">Predict</a>
+            <a href="/about" class="nav-link">About</a>
+        </div>
+    </nav>
+
+    <main class="container result-page">
+
+        <!-- Result Hero Card -->
+        <div class="result-hero-card {% if approved %}approved{% else %}rejected{% endif %}">
+            <div class="result-icon-wrap">
+                <div class="result-big-icon">{{ '✅' if approved else '❌' }}</div>
+                <div class="result-ripple"></div>
+            </div>
+            <h1 class="result-title">
+                Loan {{ 'Approved!' if approved else 'Rejected' }}
+            </h1>
+            <p class="result-subtitle">
+                {% if approved %}
+                Congratulations! Based on your profile, your loan application is likely to be <strong>approved</strong>.
+                {% else %}
+                Based on the provided information, your loan application is likely to be <strong>declined</strong>.
+                {% endif %}
+            </p>
+
+            <!-- Confidence Meter -->
+            <div class="confidence-section">
+                <div class="confidence-label">
+                    Model Confidence: <strong>{{ confidence }}%</strong>
+                    <span class="model-badge">{{ best_model }}</span>
+                </div>
+                <div class="confidence-bar-bg">
+                    <div class="confidence-bar {% if approved %}bar-approved{% else %}bar-rejected{% endif %}"
+                        style="width: {{ confidence }}%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applicant Summary -->
+        <div class="form-card applicant-summary">
+            <div class="card-header">
+                <h2 class="card-title">📋 Application Summary</h2>
+                <p class="card-subtitle">Details submitted for this prediction</p>
+            </div>
+            <div class="summary-grid">
+                {% for key, val in applicant_data.items() %}
+                <div class="summary-item">
+                    <div class="summary-key">{{ key }}</div>
+                    <div class="summary-val">{{ val }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="form-card tips-card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    {% if approved %}💡 Tips to Secure Your Loan{% else %}💡 How to Improve Eligibility{% endif %}
+                </h2>
+            </div>
+            <ul class="tips-list">
+                {% if approved %}
+                <li>✅ Maintain your <strong>good credit history</strong> going forward.</li>
+                <li>✅ Ensure your <strong>income documents</strong> are up to date.</li>
+                <li>✅ Choose a <strong>loan tenure</strong> that keeps EMIs manageable.</li>
+                <li>✅ Compare interest rates from multiple lenders before finalizing.</li>
+                {% else %}
+                <li>💳 Improve your <strong>credit score</strong> by repaying existing debts on time.</li>
+                <li>💰 Try to <strong>increase your income</strong> or add a co-applicant with higher income.</li>
+                <li>📉 Consider applying for a <strong>lower loan amount</strong>.</li>
+                <li>🏠 Opting for a <strong>semiurban or urban</strong> property area may improve chances.</li>
+                <li>⏳ Extend the <strong>loan term</strong> to reduce the monthly burden perception.</li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <div class="result-actions">
+            <a href="/" class="btn-predict">
+                <span class="btn-text">Try Another Prediction</span>
+                <span class="btn-arrow">→</span>
+            </a>
+            <a href="/about" class="btn-outline">View Model Details</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>🏦 LoanAI — Powered by Python, Scikit-learn & Flask &nbsp;|&nbsp;
+            <a href="/about">Model Details</a>
+        </p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Animate confidence bar on load
+        window.addEventListener('load', () => {
+            const bar = document.querySelector('.confidence-bar');
+            if (bar) {
+                const w = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => { bar.style.width = w; }, 200);
+            }
+        });
+    </script>
+</body>
+
+</html>

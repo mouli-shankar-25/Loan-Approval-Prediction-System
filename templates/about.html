@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="About LoanAI – machine learning model details, accuracy comparisons and feature importance." />
+    <title>LoanAI – Model Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+
+<body>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="brand-icon">🏦</span>
+            <span class="brand-name">Loan<span class="accent">AI</span></span>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="nav-link">Predict</a>
+            <a href="/about" class="nav-link active">About</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="pulse-dot"></span> Model Details
+            </div>
+            <h1 class="hero-title">Behind the <span class="gradient-text">Prediction</span></h1>
+            <p class="hero-subtitle">Three machine learning models compete — the best performer makes your prediction.
+            </p>
+        </div>
+    </section>
+
+    <main class="container">
+
+        <!-- Model Accuracy Cards -->
+        <div class="form-card">
+            <div class="card-header">
+                <h2 class="card-title">📊 Model Performance Comparison</h2>
+                <p class="card-subtitle">Accuracy measured on 20% held-out test data</p>
+            </div>
+
+            {% if accuracies %}
+            <div class="model-cards">
+                {% for name, acc in accuracies.items() %}
+                <div class="model-card {% if name == best_model %}best{% endif %}">
+                    {% if name == best_model %}<div class="best-badge">🏆 Best Model</div>{% endif %}
+                    <div class="model-name">
+                        {% if 'Logistic' in name %}📈{% elif 'Tree' in name %}🌳{% else %}🌲{% endif %}
+                        {{ name }}
+                    </div>
+                    <div class="model-acc">{{ acc }}%</div>
+                    <div class="acc-bar-bg">
+                        <div class="acc-bar" style="width: {{ acc }}%"></div>
+                    </div>
+                    <div class="model-desc">
+                        {% if 'Logistic' in name %}
+                        A linear classifier — fast, interpretable, and effective for binary outcomes.
+                        {% elif 'Tree' in name %}
+                        Rule-based splits — easy to visualize, prone to overfitting without constraints.
+                        {% else %}
+                        Ensemble of 100 trees — high accuracy, robust to noise and outliers.
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-error">
+                ⚠️ Model not trained yet. Please run <code>python train_model.py</code> first.
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Features Used -->
+        <div class="form-card">
+            <div class="card-header">
+                <h2 class="card-title">🔍 Features Used for Prediction</h2>
+                <p class="card-subtitle">11 applicant attributes feed the model</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-chip">👤 Gender</div>
+                <div class="feature-chip">💍 Marital Status</div>
+                <div class="feature-chip">👨‍👩‍👧 Dependents</div>
+                <div class="feature-chip">🎓 Education</div>
+                <div class="feature-chip">💼 Self Employed</div>
+                <div class="feature-chip">💰 Applicant Income</div>
+                <div class="feature-chip">💵 Co-applicant Income</div>
+                <div class="feature-chip">🏷️ Loan Amount</div>
+                <div class="feature-chip">📅 Loan Term</div>
+                <div class="feature-chip">💳 Credit History</div>
+                <div class="feature-chip">🏘️ Property Area</div>
+            </div>
+        </div>
+
+        <!-- Pipeline -->
+        <div class="form-card">
+            <div class="card-header">
+                <h2 class="card-title">⚙️ ML Pipeline</h2>
+            </div>
+            <div class="pipeline">
+                <div class="pipeline-step">
+                    <div class="step-num">1</div>
+                    <div class="step-label">Data Generation<br /><small>1000 synthetic records</small></div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="step-num">2</div>
+                    <div class="step-label">Preprocessing<br /><small>Fill missing, encode labels</small></div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="step-num">3</div>
+                    <div class="step-label">Train Models<br /><small>LR, DT, RF</small></div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="step-num">4</div>
+                    <div class="step-label">Select Best<br /><small>By test accuracy</small></div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="step-num">5</div>
+                    <div class="step-label">Predict<br /><small>via Flask API</small></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tech Stack -->
+        <div class="form-card">
+            <div class="card-header">
+                <h2 class="card-title">🛠️ Technology Stack</h2>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-badge">🐍 Python 3</div>
+                <div class="tech-badge">🐼 Pandas</div>
+                <div class="tech-badge">🔢 NumPy</div>
+                <div class="tech-badge">🤖 Scikit-learn</div>
+                <div class="tech-badge">🌐 Flask</div>
+                <div class="tech-badge">🎨 HTML/CSS/JS</div>
+            </div>
+        </div>
+
+        <div class="result-actions">
+            <a href="/" class="btn-predict">
+                <span class="btn-text">Make a Prediction</span>
+                <span class="btn-arrow">→</span>
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <p>🏦 LoanAI — Powered by Python, Scikit-learn & Flask</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.acc-bar').forEach(bar => {
+                const w = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => { bar.style.width = w; }, 300);
+            });
+        });
+    </script>
+</body>
+
+</html>
